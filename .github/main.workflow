@@ -1,8 +1,13 @@
-workflow "Place holder" {
-  resolves = ["Holder Flow"]
-  on = "push"
+workflow "Deploy on AWS Lambda on PR merge" {
+    on = "pull_request"
+    resolves = "Deploy"
 }
 
-action "Holder Flow" {
-  uses = "./actions/deploy/"
+action "Is PR merged" {
+    uses = "./actions/is_merged/"
+}
+
+action "Deploy" {
+    needs = "Is PR merged"
+    uses = "./actions/deploy/"
 }
