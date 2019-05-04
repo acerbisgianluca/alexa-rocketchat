@@ -8,6 +8,7 @@ Innovating incredible new user experiences in the Alexa ecosystem - powered by R
 ### Repository Contents
 * `/.ask`	- [ASK CLI (Command Line Interface) Configuration](https://developer.amazon.com/docs/smapi/ask-cli-intro.html)	 
 * `/lambda/custom` - Back-End Logic for the Alexa Skill hosted on [AWS Lambda](https://aws.amazon.com/lambda/)
+* `/lambda/custom/resources` - Language specific speech response
 * `/models` - Voice User Interface and Language Specific Interaction Models
 * `skill.json`	- [Skill Manifest](https://developer.amazon.com/docs/smapi/skill-manifest.html)
 
@@ -47,7 +48,7 @@ Innovating incredible new user experiences in the Alexa ecosystem - powered by R
 
 ASK CLI will create the skill and the lambda function for you. The Lambda function will be created in ```us-east-1 (Northern Virginia)``` by default.
 
-1. Deploy the skill and the lambda function in one step by running the following command:
+1. Make sure you are at your `alexa-rocketchat` top level project directory, then deploy the skill and the lambda function in one step by running the following command:
 
 	```bash
 	$ ask deploy
@@ -61,7 +62,7 @@ ASK CLI will create the skill and the lambda function for you. The Lambda functi
 	
 ### Configuring Account Linking
 
-1. Login to Alexa Developer Console, and go to Build section on top.
+1. Login to Alexa Developer Console, click on the Rocket.Chat skill on the list, and go to Build section on top.
 
 2. Click on Account Linking on the bottom left.
 
@@ -82,7 +83,7 @@ ASK CLI will create the skill and the lambda function for you. The Lambda functi
 8. Click on **New Application** on top right. Now we need to give it an *Application Name* and a *Redirect URI*. 
  
 9. For *Application Name* use **"alexa"**. This can be anything else as well. And for the *Redirect URI*, go back to Amazon Developer Console Account Linking page and at the bottom of the page you'll find some redirect URLs.
-Copy **https://pitangui.amazon.com/api/skill/link/YOURVENDORID** or **https://layla.amazon.com/api/skill/link/YOURVENDORID** and paste it in the *Redirect URI* field. Click on save changes.
+Copy **https://pitangui.amazon.com/api/skill/link/YOURVENDORID** or **https://layla.amazon.com/api/skill/link/YOURVENDORID** or **https://alexa.amazon.co.jp/api/skill/link/YOURVENDORID** and paste it in the *Redirect URI* field. They work according to the locale of your developer account, so try another if one of them doesn't work. Click on save changes.
 
 10. You'll see it automatically generating *Client ID, Client Secret, Authorization URL, and Access Token URL*. Now copy these from the oauth app page and paste it in the *Client ID, Client Secret, Authorization URL, and Access Token URL* fields on the amazon developer console account linking page.
 
@@ -96,15 +97,19 @@ Copy **https://pitangui.amazon.com/api/skill/link/YOURVENDORID** or **https://la
 
 14. Give a unique name in lower case for the custom oauth. For example enter **"alexaskill"**.Click on Send. Set this name in the lambda environment variables for **OAUTH_SERVICE_NAME**. 
 
-15. You will now be provided a few fields some of which will be prefilled. We only need to change a few. First change the *Enable* to **true**. In the *URL* enter **https://yourservername.rocket.chat/api/v1** . Finally at the bottom switch *Merge users* to true. We don't need to make any other changes here.
+15. You will now be provided a few fields some of which will be prefilled. We only need to change a few. First change the *Enable* to **true**. In the *URL* enter **https://yourservername.rocket.chat/api/v1**. 
 
-16. Click on **Save Changes** on top. WE ARE DONE!
+16. Finally at the bottom switch *Merge users* to true. We don't need to make any other changes here.
+
+17. Click on **Save Changes** on top. WE ARE DONE!
 	
 ### Testing
 
-1. To test, you need to login to Alexa Developer Console, and enable the "Test" switch on your skill from the "Test" Tab.
+1. Before testing, you must make sure that Account Linking has completed.   Go to alexa.amazon.com or your alexa app and click **account linking** to complete the link.
 
-2. Once the "Test" switch is enabled, your skill can be tested in the Alexa skill simulator or on devices associated with the developer account as well. Speak to Alexa from any enabled device, from your browser at [echosim.io](https://echosim.io/welcome), or through your Amazon Mobile App and say :
+2. To test, you need to login to Alexa Developer Console, and enable the "Test" switch on your skill from the "Test" Tab.
+
+3. Once the "Test" switch is enabled, your skill can be tested in the Alexa skill simulator or on devices associated with the developer account as well. Speak to Alexa from any enabled device, from your browser at [echosim.io](https://echosim.io/welcome), or through your Amazon Mobile App and say :
 
 	```text
 	Alexa, start rocket chat
@@ -121,9 +126,13 @@ Copy **https://pitangui.amazon.com/api/skill/link/YOURVENDORID** or **https://la
 
 2. ```./lambda/custom/index.js```
 
-   Modify messages, and other strings from the source code to customize the skill.
+   Add new handlers for intents, modify intent logic, enhance the functionality of the source code to customize the skill.
 
-3. ```./models/*.json```
+3. ```./lambda/custom/resources/*.json```
+
+   Modify messages, and other strings to customize the skill responses. Repeat the operation for each locale you are planning to support.
+
+4. ```./models/*.json```
 
 	Change the model definition to replace the invocation name and, if necessary for your customization, the sample phrases for each intent.  Repeat the operation for each locale you are planning to support.
 
@@ -137,8 +146,12 @@ Copy **https://pitangui.amazon.com/api/skill/link/YOURVENDORID** or **https://la
 2. ```Axios Documentation```
 
     Promise based HTTP client for the browser and node.js - [Github Page](https://github.com/axios/axios )
+
+3. ```Jargon Documentation```
+
+    The Jargon SDK makes it easy for skill developers to manage their runtime content, and to support multiple languages from within their skill - [Github Page](https://github.com/JargonInc/jargon-sdk-nodejs/tree/master/packages/alexa-skill-sdk )
     
-3. ```Slot Type Reference```
+4. ```Slot Type Reference```
 
     The Alexa Skills Kit supports several slot types that define how data in the slot is recognized and handled - [Official Documentation ](https://developer.amazon.com/docs/custom-skills/slot-type-reference.html )
     
